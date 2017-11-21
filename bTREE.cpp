@@ -6,10 +6,11 @@ bTREE::bTREE()
 {
 	rootNode->left = leftTree->rootNode;
 	rootNode->right = rightTree->rootNode;
-	rootNode->time = 0;
 	rootNode->data = "";
+	rootNode->time = 0;
 	rootNode->isLeaf = true;
-	
+	leftTree->rootNode = NULL;
+	rightTree->rootNode = NULL;
 }
 
 bTREE::~bTREE()
@@ -17,77 +18,81 @@ bTREE::~bTREE()
 	delete rootNode;
 }
 
-int bTREE::dataInserted() //only number of leaves
+int bTREE::dataInserted()
 {
+	int noOfData = 0;
+	if (rootNode == NULL)
+	{
+		noOfData= 0;
+	}
+	else if (rootNode->isLeaf == true)
+	{
+		noOfData = 1;
+	}
+	else
+	{
+		noOfData = leftTree->dataInserted() + rightTree->dataInserted();
+	}
+	return noOfData;
 }
 
 int bTREE::numberOfNodes()
 {
+	int numNodes = 0;
+	if (rootNode == NULL)
+	{
+		numNodes = 0;
+	}
+	else if (leftTree->rootNode == NULL && rightTree->rootNode == NULL)
+	{
+		numNodes = 1;
+	}
+	else
+	{
+		numNodes = 1 + leftTree->numberOfNodes() + rightTree->numberOfNodes();
+	}
+	return numNodes;
 }
 
-bool inserthelper(string data1, int time1, treeNode * node)
+int bTREE::insert(string data, int time)
 {
-	treeNode * newNode = new treeNode();
-	if(node->isLeaf == true)
-	{
-		newNode->data = data1;
-		newNode->time = time1;
-		node->left = newNode;
-	}
-	else 
-	{
-		if(node->left == NULL)//check for left
-		{
-			newNode->data = data1;
-			newNode->time = time1;
-			node->left = newNode;
-		}
-		
-		else if(node->right == NULL)//check for right
-		{
-			newNode->data = data1;
-			newNode->time = time1;
-			node->right = newNode;
-		}
-	}
-	 
-	return true;
+	//bool found;
+	//if (rootNode->left == NULL)
+	//{
+	//	//add to the left
+	//	found = true;
+	//}
+	//else if (rootNode->right == NULL)
+	//{
+	//	//add to the right
+	//	found = true;
+	//}
+	//else
+	//{
+	//	leftTree->insert(data, time);
+	//	right
+	//}
 }
-int bTREE::insert(string data1, int time1)
-{
-	treeNode * newNode = new treeNode();
-	if(rootNode->isLeaf == true)
-	{
-		newNode->data = data1;
-		newNode->time = time1;
-		rootNode->left = newNode;
-		return 0;
-	}
-	else 
-	{
-		inserthelper(data1,time1,rootNode);
-	}
-	 
-	return true;
-}
-
 
 int bTREE::find(string)
 {
 }
 
-string bTREE::locate()
+string bTREE::locate(string x)
 {
 }
 
-friend bool bTREE::operator ==(const bTREE& lhs, const bTREE& rhs)
+bool operator ==(const bTREE& lhs, const bTREE& rhs)
 {
+	return false;
 }
 
-friend bool bTREE::operator !=(const bTREE& lhs, const bTREE& rhs)
+bool operator!=(const bTREE & lhs, const bTREE & rhs)
 {
+	return false;
 }
 
-friend std::ostream& bTREE::operator <<(std::ostream& out, const bTREE& p)
+std::ostream & operator<<(std::ostream & out, const bTREE & p)
 {
+	// TODO: insert return statement here
 }
