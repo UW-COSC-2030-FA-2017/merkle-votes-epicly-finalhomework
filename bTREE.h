@@ -1,5 +1,4 @@
 #pragma once
-#include "LinkedList.h"
 #include <string>
 using namespace std;
 
@@ -8,18 +7,20 @@ class bTREE
     struct treeNode{
         string data;
         int time;
-		treeNode * left;
+		treeNode* left;
 		treeNode * right;
 		bool isLeaf;
-    }; 
+    };
     
 private:
-	treeNode * rootNode;
-	bTREE * rightTree;
+	treeNode* rootNode;
 	bTREE * leftTree;
+	bTREE * rightTree;
     //some data structure to hold your treeNodes together ...
     //DATASTUCTURE treeNodes tree;
     //any helper private variables you need
+	
+
     
 public:
     bTREE();
@@ -33,7 +34,8 @@ public:
     int find(string);
     
     string locate(string);
-	
+    
+    
     friend bool operator==(const bTREE& lhs, const bTREE& rhs);
     friend bool operator!=(const bTREE& lhs, const bTREE& rhs);
 
