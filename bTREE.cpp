@@ -67,7 +67,38 @@ string bTREE::getRootNodeData() const
 int bTREE::insert(string data, int time)
 {
     // once we insert a node to another node, have to change the parent node's isLeaf status.
-    return 0;
+    bool insert;
+	treeNode * newNode = new treeNode();
+	newNode->data = data1;
+	newNode->time = time1;
+	if(rootNode->left == NULL) //change root
+	{
+		rootNode->left = newNode;
+		insert = true;
+	}
+	
+	else if(rootNode->right == NULL)
+	{
+		rootNode->right = newNode;
+		insert = true;
+	}
+	
+	else 
+	{
+		if (leftTree->insert(data1,time1) == 0)
+		{
+		}
+		else (rightTree->insert(data1,time1) == 0)
+		{
+		}
+	}
+	
+		if(insert)
+		{
+			rootNode->isLeaf = false; 
+			return 1;
+		}
+		return 0;
 }
 //0 is false i.e the string was not found, any other number indicates the number of operations.
 // how to count the number of operations in a function for individual submission?
