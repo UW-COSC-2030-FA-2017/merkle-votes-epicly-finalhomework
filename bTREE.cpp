@@ -64,39 +64,43 @@ string bTREE::getRootNodeData() const
 {
     return rootNode->data;
 }
-int bTREE::insert(string data, int time)
+
+    
+int bTREE::insert(string data1, int time1)
 {
-    // once we insert a node to another node, have to change the parent node's isLeaf status.
-    bool insert;
-	treeNode * newNode = new treeNode();
-	newNode->data = data1;
-	newNode->time = time1;
-	if(rootNode->left == NULL) //change root
+	   // once we insert a node to another node, have to change the parent node's isLeaf status.
+	static int noOfSteps = 0;
+	bool insert = false;
+	bTREE * newNode = new bTREE();
+	newNode->rootNode->data = data1;
+	newNode->rootNode->time = time1;
+	
+	if (rootNode == NULL)
 	{
-		rootNode->left = newNode;
-		insert = true;
+		rootNode = newNode->rootNode;
+		myQueue.push(newNode);
 	}
 	
-	else if(rootNode->right == NULL)
+	else if(myQueue.front()->leftTree == NULL) //change root
 	{
-		rootNode->right = newNode;
+		myQueue.front()->leftTree = newNode;
+		myQueue.push(newNode);
+		noOfSteps++;
 		insert = true;
 	}
 	
 	else 
 	{
-		if (leftTree->insert(data1,time1) == 0)
-		{
-		}
-		else (rightTree->insert(data1,time1) == 0)
-		{
-		}
+		myQueue.front()->rightTree = newNode;
+		myQueue.push(newNode);
+		myQueue.pop();
+		noOfSteps +=2;
+		insert = true;
 	}
-	
-		if(insert)
+		if(insert)  
 		{
 			rootNode->isLeaf = false; 
-			return 1;
+			return noOfSteps;
 		}
 		return 0;
 }
