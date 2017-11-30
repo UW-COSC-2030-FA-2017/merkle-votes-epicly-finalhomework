@@ -26,9 +26,43 @@ int pMT::insert(string vote, int time)
  * @param time - an int representing the time
  * @return the number of operations needed to do the insert, -1 if out of memory
  */
-
 {
-    return 0;
+bool insert = false;
+	bTREE * newTree = new bTREE();
+	treeNode * oldData = new treeNode();
+	oldData->data = myMerkle.rightTree.getRootNodeData();
+	oldData->time = myMerkle.rightTree.get
+	treeNode * newData = new treeNode();
+	newData->data = vote;
+	newData->time = time1;
+	if(leftTree->rootNode == NULL) //change root
+	{
+		leftTree->rootNode = newNode;
+		
+		insert = true;
+	}
+	
+	else if(rightTree->rootNode == NULL)
+	{
+		rightTree->rootNode = newNode;
+		insert = true;
+	}
+	
+	else 
+	{
+		if (leftTree->insert(data1,time1) == 0)
+		{
+			rightTree->insert(data1,time1);
+		}
+	}
+	
+		if(insert)
+		{
+			rootNode->isLeaf = false; 
+			return 1;
+		}
+		
+		return 0;
 }
 
 int pMT::find(string vote, int time, int hashSelect)
@@ -125,7 +159,17 @@ string pMT::hash_2(string key)
  * @return a hash of the key
  */
 {
-    return "";
+unsigned int i = 0;
+   unsigned int hash = 2034;
+   const char* tmp = key.c_str();
+   int length = key.length();
+ 
+   for (i = 0; i < length; ++tmp, ++i)
+   {
+      hash = (((hash << 3) ^ (*tmp) + (hash << 7)));
+   }
+
+   return std::to_string(hash);
 }
 
 string pMT::hash_3(string key)
