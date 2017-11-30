@@ -79,13 +79,14 @@ int bTREE::insert(string data1, int time1)
 	{
 		rootNode = newNode->rootNode;
 		myQueue.push(newNode);
+		noOfSteps++;
 	}
 	
 	else if(myQueue.front()->leftTree == NULL) //change root
 	{
 		myQueue.front()->leftTree = newNode;
 		myQueue.push(newNode);
-		noOfSteps++;
+		noOfSteps+=2;
 		insert = true;
 	}
 	
@@ -94,7 +95,7 @@ int bTREE::insert(string data1, int time1)
 		myQueue.front()->rightTree = newNode;
 		myQueue.push(newNode);
 		myQueue.pop();
-		noOfSteps +=2;
+		noOfSteps +=3;
 		insert = true;
 	}
 		if(insert)  
