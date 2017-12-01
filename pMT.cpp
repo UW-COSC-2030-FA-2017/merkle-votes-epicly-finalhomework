@@ -137,7 +137,15 @@ string pMT::hash_3(string key)
  * @return a hash of the key
  */
 {
-    return "";
+	int M = 32;
+	char ch[];
+	ch = key.toCharArray();
+	int keylength = key.length();
+
+	int i, sum;
+	for (sum = 0, i = 0; i < key.length(); i++)
+		sum += ch[i];
+	return sum % M;
 }
 // can i just check if the data(hash) in the rootNode of first tree is equal to the hash in the rootNode of the second tree?
 bool operator ==(const pMT& lhs, const pMT& rhs)
