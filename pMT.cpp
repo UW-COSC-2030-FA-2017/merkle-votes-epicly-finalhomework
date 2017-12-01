@@ -19,50 +19,54 @@ pMT::~pMT()
 {
 }
 
-int pMT::insert(string vote, int time)
+string pMT::hash_selected(string data)
+{
+	switch (selectedHash)
+	{
+		case 1: return hash_1(data);
+		break;
+		case 2: return hash_2(data);
+		break;
+		case 3: return hash_3(data);
+		default:
+		return hash_1(data);
+	}
+}
+
+void pMT::rhash(bTREE *tree) 
+{
+	int noOfSteps = 0;
+	if((tree->leftTree->leftTree != NULL) && (tree->leftTree->rightTree != NULL))
+	{
+		rhash(tree->leftTree);
+		noOfSteps++;
+	}
+	
+	if((tree->rightTree->leftTree != NULL) && (tree->rightTree->rightTree != NULL))
+	{
+		rhash(tree->rightTree);
+		noOfSteps++;
+	}
+	
+	tree->rootNode->data = hash_selected(tree->leftTree->rootNode->data) + hash_selected(tree->rightTree->rootNode->data);
+	noOfSteps++;
+	//return noOfSteps;
+}
+
+void pMT::update()
+{
+	rhash(&myMerkle);
+}
+
+int pMT::insert(string vote, int time1)
 /**
  * @brief insert a vote and time into a leaf node of tree
  * @param vote - a string
- * @param time - an int representing the time
+ * @param time - an int representing the time 
  * @return the number of operations needed to do the insert, -1 if out of memory
  */
 {
-bool insert = false;
-	bTREE * newTree = new bTREE();
-	treeNode * oldData = new treeNode();
-	oldData->data = myMerkle.rightTree.getRootNodeData();
-	oldData->time = myMerkle.rightTree.get
-	treeNode * newData = new treeNode();
-	newData->data = vote;
-	newData->time = time1;
-	if(leftTree->rootNode == NULL) //change root
-	{
-		leftTree->rootNode = newNode;
-		
-		insert = true;
-	}
-	
-	else if(rightTree->rootNode == NULL)
-	{
-		rightTree->rootNode = newNode;
-		insert = true;
-	}
-	
-	else 
-	{
-		if (leftTree->insert(data1,time1) == 0)
-		{
-			rightTree->insert(data1,time1);
-		}
-	}
-	
-		if(insert)
-		{
-			rootNode->isLeaf = false; 
-			return 1;
-		}
-		
-		return 0;
+	return myMerkle.insert(vote,time1);
 }
 
 int pMT::find(string vote, int time, int hashSelect)
