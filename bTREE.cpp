@@ -1,5 +1,6 @@
 #include "bTREE.h"
 #include <vector>
+#include <iostream>
 using namespace std;
 
 //look at descriptions in pMT.h for guidance on what you might need for these function to actually do
@@ -15,6 +16,7 @@ bTREE::bTREE()
 	rootNode->isLeaf = true;
 //	leftTree->rootNode = NULL;
 //	rightTree->rootNode = NULL;
+    myQueue.push(this);
 }
 
 bTREE::~bTREE()
@@ -64,24 +66,31 @@ string bTREE::getRootNodeData() const
 {
     return rootNode->data;
 }
+bTREE bTREE::getLeftTree() const
+{
+    return *leftTree;
+}
+bTREE bTREE::getRightTree() const
+{
+    return *rightTree;
+}
 
-    
 int bTREE::insert(string data1, int time1)
 {
-	   // once we insert a node to another node, have to change the parent node's isLeaf status.
+    // once we insert a node to another node, have to change the parent node's isLeaf status.
 	static int noOfSteps = 0;
 	bool insert = false;
 	bTREE * newNode = new bTREE();
 	newNode->rootNode->data = data1;
 	newNode->rootNode->time = time1;
-	
+
 	if (rootNode == NULL)
 	{
 		rootNode = newNode->rootNode;
 		myQueue.push(newNode);
 		noOfSteps++;
 	}
-	
+
 	else if(myQueue.front()->leftTree == NULL) //change root
 	{
 		myQueue.front()->leftTree = newNode;
@@ -89,8 +98,8 @@ int bTREE::insert(string data1, int time1)
 		noOfSteps+=2;
 		insert = true;
 	}
-	
-	else 
+
+	else
 	{
 		myQueue.front()->rightTree = newNode;
 		myQueue.push(newNode);
@@ -98,9 +107,9 @@ int bTREE::insert(string data1, int time1)
 		noOfSteps +=3;
 		insert = true;
 	}
-		if(insert)  
+		if(insert)
 		{
-			rootNode->isLeaf = false; 
+			rootNode->isLeaf = false;
 			return noOfSteps;
 		}
 		return 0;
@@ -182,8 +191,62 @@ bool operator!=(const bTREE & lhs, const bTREE & rhs)
     return not_equality;
 }
 
-std::ostream & operator<<(std::ostream & out, const bTREE & p)
+void
+   bTREE:: displayLeft( std::ostream & outfile,
+   bTREE * subtree, std::string prefix )
 {
-	// TODO: insert return statement here
-	return out;
+   if( subtree == NULL )
+   {
+      outfile << prefix + "/" << endl;
+   }
+   else
+   {
+      displayLeft( outfile, subtree->leftTree, prefix + "     " );
+      outfile << prefix + "/---" << subtree->getRootNodeData() << std::endl;
+      displayRight( outfile, subtree->rightTree, prefix + "|    " );
+   }
 }
+
+
+// Display the nodes connected to subtree.
+// This is a right subtree.
+// Use a line by line display, order nodes from left to
+//   right, draw connecting lines.
+void
+   bTREE:: displayRight( std::ostream & outfile,
+   bTREE * subtree, std::string prefix )
+{
+   if( subtree == NULL )
+   {
+      outfile << prefix + "\\" << std::endl;
+   }
+   else
+   {
+      displayLeft( outfile, subtree->leftTree, prefix + "|    " );
+      outfile << prefix + "\\---" << subtree->getRootNodeData() << std::endl;
+      displayRight( outfile, subtree->rightTree, prefix + "     " );
+   }
+}
+
+
+std::ostream& operator <<(std::ostream& out, const bTREE& p)
+{
+   std::string prefix;
+   if( p.rootNode->isLeaf == true)
+   {
+      out << "-" << endl;
+   }
+   else
+   {
+      bTREE::displayLeft( out, p.leftTree, "    " );
+      out << "---" << p.getRootNodeData() << std::endl;
+      bTREE::displayRight( out, p.rightTree, "    " );
+   }
+   return out;
+}
+
+//std::ostream & operator<<(std::ostream & out, const bTREE & p)
+//{
+//	// TODO: insert return statement here
+//	return out;
+//}

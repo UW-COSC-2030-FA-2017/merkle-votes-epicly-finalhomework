@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <queue>   
+#include <queue>
 using namespace std;
 
 class bTREE
@@ -17,32 +17,31 @@ class bTREE
 
 private:
 
-	std::queue < bTREE* > myQueue;
-
     //some data structure to hold your treeNodes together ...
     //DATASTUCTURE treeNodes tree;
     //any helper private variables you need
-	
-	static void displayLeft( std::ostream & outfile, 
-      bTREE * subtree, std::string prefix );
-	  
-    static void displayRight( std::ostream & outfile, 
-      bTREE * subtree, std::string prefix );
-
+    //queue<bTREE*> myQueue;
 
 
 public:
     bTREE();
     ~bTREE();
-	treeNode* rootNode;
+    //transferred from private to public to avoid accessibility issues.
+    treeNode* rootNode;
 	bTREE * leftTree;
 	bTREE * rightTree;
-	
+    queue<bTREE*> myQueue;
+    //----------------------------------------------------------------
     int dataInserted();
     int numberOfNodes();
     // to help access data by pMT class objects
     string getRootNodeData() const;
-
+    bTREE getLeftTree() const;
+    bTREE getRightTree() const;
+    bool isRootNodeLeaf() const
+    {
+        return rootNode->isLeaf;
+    }
     int insert(string, int);
 
     int find(string);
@@ -54,6 +53,12 @@ public:
     friend bool operator!=(const bTREE& lhs, const bTREE& rhs);
 
     friend std::ostream& operator<<(std::ostream& out, const bTREE& p);
+
+    static void displayLeft( std::ostream & outfile,
+      bTREE * subtree, std::string prefix );
+
+    static void displayRight( std::ostream & outfile,
+      bTREE * subtree, std::string prefix );
 
 };
 

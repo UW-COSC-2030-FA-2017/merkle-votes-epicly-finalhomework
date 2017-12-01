@@ -18,55 +18,18 @@ pMT::~pMT()
  */
 {
 }
-
-string pMT::hash_selected(string data)
-{
-	switch (selectedHash)
-	{
-		case 1: return hash_1(data);
-		break;
-		case 2: return hash_2(data);
-		break;
-		case 3: return hash_3(data);
-		default:
-		return hash_1(data);
-	}
-}
-
-void pMT::rhash(bTREE *tree) 
-{
-	int noOfSteps = 0;
-	if((tree->leftTree->leftTree != NULL) && (tree->leftTree->rightTree != NULL))
-	{
-		rhash(tree->leftTree);
-		noOfSteps++;
-	}
-	
-	if((tree->rightTree->leftTree != NULL) && (tree->rightTree->rightTree != NULL))
-	{
-		rhash(tree->rightTree);
-		noOfSteps++;
-	}
-	
-	tree->rootNode->data = hash_selected(tree->leftTree->rootNode->data) + hash_selected(tree->rightTree->rootNode->data);
-	noOfSteps++;
-	//return noOfSteps;
-}
-
-void pMT::update()
-{
-	rhash(&myMerkle);
-}
-
-int pMT::insert(string vote, int time1)
+//in this implementation only data is passed to add to the merkle tree using this function.
+int pMT::insert(string vote, int time)
 /**
  * @brief insert a vote and time into a leaf node of tree
  * @param vote - a string
- * @param time - an int representing the time 
+ * @param time - an int representing the time
  * @return the number of operations needed to do the insert, -1 if out of memory
  */
+
 {
-	return myMerkle.insert(vote,time1);
+
+    return myMerkle.insert(vote, time);
 }
 
 int pMT::find(string vote, int time, int hashSelect)
@@ -132,6 +95,7 @@ string pMT:: locate(string dataOrHash)
 
 
 //how to handle collisions?
+//copied from partow.com and changed.
 string pMT::hash_1(string key)
 /**
  * @brief A function that takes in a key and returns a hash of that key using some custom function
@@ -149,11 +113,11 @@ string pMT::hash_1(string key)
 
     for (i = 0; i < length; ++str, ++i)
     {
-       hash = (hash * seed) + (*str);
+       hash = (hash * seed) + (*str); // have to understand what this is doing.
     }
-    itoa(hash, hashString, 16);
+    itoa(hash, hashString, 16);// changes decimal to hexadecimal
 
-    return hashString;
+    return hashString;//hexadecimal hash returned
 }
 
 string pMT::hash_2(string key)
@@ -163,17 +127,7 @@ string pMT::hash_2(string key)
  * @return a hash of the key
  */
 {
-unsigned int i = 0;
-   unsigned int hash = 2034;
-   const char* tmp = key.c_str();
-   int length = key.length();
- 
-   for (i = 0; i < length; ++tmp, ++i)
-   {
-      hash = (((hash << 3) ^ (*tmp) + (hash << 7)));
-   }
-
-   return std::to_string(hash);
+    return "";
 }
 
 string pMT::hash_3(string key)
@@ -225,7 +179,38 @@ pMT operator ^(const pMT& lhs, const pMT& rhs)
  * @return a tree comprised of the right hand side tree nodes that are NOT different from the left
  */
 {
-    return rhs;
+    if(lhs==rhs)
+    {
+        return lhs;
+    }
+    else
+    {
+        pMT tmp(lhs.selectedHash);
+        pMT tmp2(lhs.selectedHash);
+        pMT LLpmt(lhs.selectedHash);
+        LLpmt.myMerkle = lhs.myMerkle.getLeftTree();
+        pMT LRpmt(lhs.selectedHash);
+        LRpmt.myMerkle = lhs.myMerkle.getLeftTree();
+        pMT RLpmt(lhs.selectedHash);
+        RLpmt.myMerkle = lhs.myMerkle.getLeftTree();
+        pMT RRpmt(lhs.selectedHash);
+        RRpmt.myMerkle = lhs.myMerkle.getLeftTree();
+        tmp = LLpmt^RLpmt;
+        tmp2 = LRpmt^RRpmt;
+        if(tmp!= NULL)
+        {
+            return tmp;
+        }
+        else if(tmp2!=NULL)
+        {
+            return tmp2;
+        }
+        else
+        {
+            return NULL;
+        }
+    }
+
 }
 
 
@@ -237,5 +222,45 @@ std::ostream& operator <<(std::ostream& out, const pMT& p)
  * @return a tree to the screen
  */
 {
+    out<<p.getMerkle();
     return out;
+}
+
+string pMT::hash_selected(string data)
+{
+	switch (selectedHash)
+	{
+		case 1: return hash_1(data);
+		break;
+		case 2: return hash_2(data);
+		break;
+		case 3: return hash_3(data);
+		default:
+		return hash_1(data);
+	}
+}
+
+void pMT::rhash(bTREE *tree)
+{
+	int noOfSteps = 0;
+	if((tree->leftTree->leftTree != NULL) && (tree->leftTree->rightTree != NULL))
+	{
+		rhash(tree->leftTree);
+		noOfSteps++;
+	}
+
+	if((tree->rightTree->leftTree != NULL) && (tree->rightTree->rightTree != NULL))
+	{
+		rhash(tree->rightTree);
+		noOfSteps++;
+	}
+
+	tree->rootNode->data = hash_selected(tree->leftTree->rootNode->data) + hash_selected(tree->rightTree->rootNode->data);
+	noOfSteps++;
+	//return noOfSteps;
+}
+
+void pMT::update()
+{
+	rhash(&myMerkle);
 }
