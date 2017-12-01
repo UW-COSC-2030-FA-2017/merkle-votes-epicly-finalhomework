@@ -4,18 +4,20 @@
 #include <fstream>
 #include<string>
 #include <iostream>
-
+#include <sstream>
 using namespace std;
 
 void promptAndFillInVariables(vector<string>& votes, vector<int>& timeStamps, int& noOfVotes)
 {
     string filename;
     string temp;
-    cout<<"Enter the filename: "<<endl;
+	string vote1;
+	int timestamp = 0;
+    cout<<"Enter the filename: ";
     cin>>filename;
     //vector<string> votes;
     //vector<int> timeStamps;
-    ifstream myfile;
+	ifstream myfile;
     //int noOfVotes = 0;
 	myfile.open(filename);
 	int index = 0;
@@ -26,15 +28,18 @@ void promptAndFillInVariables(vector<string>& votes, vector<int>& timeStamps, in
             getline(myfile,temp);
 			if (index > 0 )
 			{
-				getline(myfile, temp);
-				int pos = temp.find(":");
-				int pos2 = temp.find(" ");
-				if (pos!=std::string::npos && pos2!=std::string::npos)
+				//getline(myfile, temp);
+				istringstream iss(temp);
+				iss >> vote1 >> timestamp;
+				int pos = vote1.find(":");
+				//int pos2 = temp.find(" ");
+				if (pos!=std::string::npos)
 				{
-				    string vote = temp.substr(0,pos);
-				    int timeStamp = stoi(temp.substr(pos2+1));
+				    string vote = vote1.substr(0,pos);
+				    //int timeStamp = stoi(temp.substr(pos2+1));
+
                     votes.push_back(vote);
-                    timeStamps.push_back(timeStamp);
+                    timeStamps.push_back(timestamp);
                     noOfVotes++;
 				}
 			}
@@ -51,12 +56,12 @@ int main(int argc, char **argv)
     //do we have to use these arguments/parameters?
     vector<string> votes;
     vector<int> timeStamps;
-    int noOfVotes;
+    int noOfVotes = 0;
     promptAndFillInVariables(votes, timeStamps, noOfVotes);
     //Till here the file has been read and the info has been stored in the two vectors declared above.
     pMT theMerkleTree(1);
     //Here insert all the data into theMerkleTree
-    while((theMerkleTree.getQueueLength())*2<noOfVotes)
+    while((theMerkleTree.getQueueLength())*2<=noOfVotes)
     {
         theMerkleTree.insert("", 0);
     }

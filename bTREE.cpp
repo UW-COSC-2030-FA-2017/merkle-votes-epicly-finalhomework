@@ -9,8 +9,8 @@ bTREE::bTREE()
 	//rootNode->left = leftTree->rootNode;
 	//rootNode->right = rightTree->rootNode;
 	rootNode = new treeNode;
-	leftTree = new bTREE;
-	rightTree = new bTREE;
+	//leftTree = new bTREE;
+	//rightTree = new bTREE;
 	rootNode->data = "";
 	rootNode->time = 0;
 	rootNode->isLeaf = true;
