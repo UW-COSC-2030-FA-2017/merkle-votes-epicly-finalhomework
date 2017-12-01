@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <queue>   
 using namespace std;
 
 class bTREE
@@ -15,19 +16,28 @@ class bTREE
     };
 
 private:
-	treeNode* rootNode;
-	bTREE * leftTree;
-	bTREE * rightTree;
+
+	std::queue < bTREE* > myQueue;
+
     //some data structure to hold your treeNodes together ...
     //DATASTUCTURE treeNodes tree;
     //any helper private variables you need
+	
+	static void displayLeft( std::ostream & outfile, 
+      bTREE * subtree, std::string prefix );
+	  
+    static void displayRight( std::ostream & outfile, 
+      bTREE * subtree, std::string prefix );
 
 
 
 public:
     bTREE();
     ~bTREE();
-
+	treeNode* rootNode;
+	bTREE * leftTree;
+	bTREE * rightTree;
+	
     int dataInserted();
     int numberOfNodes();
     // to help access data by pMT class objects
