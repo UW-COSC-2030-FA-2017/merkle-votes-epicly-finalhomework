@@ -2,23 +2,38 @@
 
 #include "bTREE.h"
 #include <string>
+#include <cstring>
 using namespace std;
+
 class pMT
 {
 private:
     int selectedHash;
     bTREE myMerkle;
-
+    
     string hash_1(string);
     string hash_2(string);
     string hash_3(string);
+    
+	struct treeNode{
+        string data;
+        int time;
+		bool isLeaf;
+    }; 
 
 public:
+	
     pMT(int);
     ~pMT();
-
-
-    int insert(string s, int i);
+    
+	void update();
+	
+	void rhash(bTREE *tree);
+	
+    string hash_selected(string data);
+	
+    int insert(string data, int time1);
+    
     // ask if changing the number of parameters is ok.
     //changed it from (string) to (string, int, int)
     int find(string, int, int);
