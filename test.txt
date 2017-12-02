@@ -1,0 +1,8 @@
+data	timestamp
+1348937365:Candidate3	1
+4FCF8F701:Candidate3	1
+A02BB2124:Candidate1	2
+13C3301441:Candidate2	3
+15D2CBA1EC:Candidate2	4
+D87956A9:Candidate2	5
+1211A3C787:Candidate2	6

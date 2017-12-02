@@ -23,9 +23,9 @@ void promptAndFillInVariables(vector<string>& votes, vector<int>& timeStamps, in
 	int index = 0;
 	if (myfile.is_open())
 	{
-		while (!myfile.eof())
+		while (getline(myfile, temp))
 		{
-            getline(myfile,temp);
+            
 			if (index > 0 )
 			{
 				//getline(myfile, temp);
@@ -61,16 +61,20 @@ int main(int argc, char **argv)
     //Till here the file has been read and the info has been stored in the two vectors declared above.
     pMT theMerkleTree(1);
     //Here insert all the data into theMerkleTree
-    while((theMerkleTree.getQueueLength())*2<=noOfVotes)
+    while((theMerkleTree.getQueueLength())*2<=noOfVotes) //.getMerkle()
     {
-        theMerkleTree.insert("", 0);
+        theMerkleTree.insert("a", 0);
+		//cout << theMerkleTree << endl;
     }
     for(int i = 0; i<noOfVotes; i++)
     {
         theMerkleTree.insert(votes[i],timeStamps[i]);
+		//cout << theMerkleTree << endl;
     }
     theMerkleTree.update();
-    cout<<"The hash in the rootNode is: "<< theMerkleTree.getMerkle().getRootNodeData()<<endl;
+	//cout << "The hash in the rootNode is: " << theMerkleTree.getMerkle().rootNode->data << endl;
+	cout << theMerkleTree << endl;
+   // cout<<"The hash in the rootNode is: "<< theMerkleTree.getMerkle().rootNode->data<<endl;
     //============================================================================
 //    promptAndFillInVariables(votes, timeStamps, noOfVotes);
 //    pMT merkleTree1(1);

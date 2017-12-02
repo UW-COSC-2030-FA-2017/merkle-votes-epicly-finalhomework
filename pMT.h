@@ -21,10 +21,10 @@ public:
     {
         return myMerkle;
     }
-    int getQueueLength() const
-    {
-        return myMerkle.myQueue.size();
-    }
+	int getQueueLength() const
+	{
+		return myMerkle.myQueueSize;
+	}
     int insert(string s, int i);
     // ask if changing the number of parameters is ok.
     //changed it from (string) to (string, int, int)

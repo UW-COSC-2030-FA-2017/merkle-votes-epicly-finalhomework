@@ -7,7 +7,7 @@ class bTREE
 {
     struct treeNode{
         // how to handle the 32 characters requirement.
-        string data;
+        string data="";
         int time;
         // do we need these? i am using two pointers to bTREE's in the private section.
 		//treeNode* left;
@@ -30,7 +30,12 @@ public:
     treeNode* rootNode;
 	bTREE * leftTree;
 	bTREE * rightTree;
-    queue<bTREE*> myQueue;
+    queue<bTREE*> myQueue=queue<bTREE*>();
+	int myQueueSize = 0;
+	/*int getQueueLength() const
+	{
+		return myQueue.size();
+	}*/
     //----------------------------------------------------------------
     int dataInserted();
     int numberOfNodes();

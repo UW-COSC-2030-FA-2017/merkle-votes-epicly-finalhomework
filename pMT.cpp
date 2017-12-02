@@ -113,7 +113,7 @@ string pMT::hash_1(string key)
 
     for (i = 0; i < length; ++str, ++i)
     {
-       hash = (hash * seed) + (*str); // have to understand what this is doing.
+       hash = (hash * seed)*(hash*seed) + (*str); 
     }
     itoa(hash, hashString, 16);// changes decimal to hexadecimal
 
@@ -255,7 +255,7 @@ void pMT::rhash(bTREE *tree)
 		noOfSteps++;
 	}
 
-	tree->rootNode->data = hash_selected(tree->leftTree->rootNode->data) + hash_selected(tree->rightTree->rootNode->data);
+	tree->rootNode->data = hash_selected(hash_selected(tree->leftTree->rootNode->data) + hash_selected(tree->rightTree->rootNode->data));
 	noOfSteps++;
 	//return noOfSteps;
 }

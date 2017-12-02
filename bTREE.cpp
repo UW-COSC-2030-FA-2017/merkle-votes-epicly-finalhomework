@@ -8,22 +8,25 @@ bTREE::bTREE()
 {
 	//rootNode->left = leftTree->rootNode;
 	//rootNode->right = rightTree->rootNode;
-	rootNode = new treeNode;
+	rootNode = new treeNode();
 	//leftTree = new bTREE;
 	//rightTree = new bTREE;
 	rootNode->data = "";
 	rootNode->time = 0;
 	rootNode->isLeaf = true;
-//	leftTree->rootNode = NULL;
-//	rightTree->rootNode = NULL;
+	leftTree = NULL;
+	rightTree = NULL;
+	//leftTree->rootNode = NULL;
+	//rightTree->rootNode = NULL;
     myQueue.push(this);
+	myQueueSize++;
 }
 
 bTREE::~bTREE()
 {
 	delete rootNode;
-	delete leftTree;
-	delete rightTree;
+	//delete leftTree;
+	//delete rightTree;
 }
 
 int bTREE::dataInserted()
@@ -80,39 +83,50 @@ int bTREE::insert(string data1, int time1)
     // once we insert a node to another node, have to change the parent node's isLeaf status.
 	static int noOfSteps = 0;
 	bool insert = false;
-	bTREE * newNode = new bTREE();
-	newNode->rootNode->data = data1;
-	newNode->rootNode->time = time1;
+	bTREE * newTree = new bTREE();
+	treeNode* newNode = new treeNode();
+	newNode->data = data1;
+	newNode->time = time1;
+	//newTree->rootNode->data = data1;
+	//newTree->rootNode->time = time1;
+	newTree->rootNode = newNode;
+	newTree->leftTree = NULL;
+	newTree->rightTree = NULL;
 
-	if (rootNode == NULL)
+	if (rootNode->data == "")
 	{
-		rootNode = newNode->rootNode;
-		myQueue.push(newNode);
+		rootNode = newNode;
+		myQueue.push(newTree);
+		myQueueSize++;
 		noOfSteps++;
+		insert = true;
 	}
 
 	else if(myQueue.front()->leftTree == NULL) //change root
 	{
-		myQueue.front()->leftTree = newNode;
-		myQueue.push(newNode);
+		myQueue.front()->leftTree = newTree;
+		myQueue.push(newTree);
+		myQueueSize++;
 		noOfSteps+=2;
 		insert = true;
 	}
 
-	else
+	else if (myQueue.front()->rightTree == NULL)
 	{
-		myQueue.front()->rightTree = newNode;
-		myQueue.push(newNode);
+		myQueue.front()->rightTree = newTree;
+		myQueue.push(newTree);
+		myQueueSize++;
 		myQueue.pop();
+		myQueueSize--;
 		noOfSteps +=3;
 		insert = true;
 	}
-		if(insert)
-		{
-			rootNode->isLeaf = false;
-			return noOfSteps;
-		}
-		return 0;
+	if(insert)
+	{
+		rootNode->isLeaf = false;
+		return noOfSteps;
+	}
+	return 0;
 }
 //0 is false i.e the string was not found, any other number indicates the number of operations.
 // how to count the number of operations in a function for individual submission?
@@ -202,7 +216,8 @@ void
    else
    {
       displayLeft( outfile, subtree->leftTree, prefix + "     " );
-      outfile << prefix + "/---" << subtree->getRootNodeData() << std::endl;
+      //outfile << prefix + "/---" << subtree->getRootNodeData() << std::endl;
+	  outfile << prefix + "\\---" << subtree->rootNode->data << std::endl;
       displayRight( outfile, subtree->rightTree, prefix + "|    " );
    }
 }
@@ -223,7 +238,8 @@ void
    else
    {
       displayLeft( outfile, subtree->leftTree, prefix + "|    " );
-      outfile << prefix + "\\---" << subtree->getRootNodeData() << std::endl;
+      //outfile << prefix + "\\---" << subtree->getRootNodeData() << std::endl;
+	  outfile << prefix + "\\---" << subtree->rootNode->data << std::endl;
       displayRight( outfile, subtree->rightTree, prefix + "     " );
    }
 }
@@ -239,7 +255,9 @@ std::ostream& operator <<(std::ostream& out, const bTREE& p)
    else
    {
       bTREE::displayLeft( out, p.leftTree, "    " );
-      out << "---" << p.getRootNodeData() << std::endl;
+      //out << "---" << p.getRootNodeData() << std::endl;
+	  out << "---" << p.rootNode->data << std::endl;
+
       bTREE::displayRight( out, p.rightTree, "    " );
    }
    return out;
