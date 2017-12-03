@@ -52,12 +52,14 @@ public:
     int find(string);
 
     string locate(string);
+	string locateH(bTREE* tree, string& hash, string& directions);
+	int findHD(bTREE* tree, string& hash, int& directions);
 
 
     friend bool operator==(const bTREE& lhs, const bTREE& rhs);
     friend bool operator!=(const bTREE& lhs, const bTREE& rhs);
 
-    friend std::ostream& operator<<(std::ostream& out, const bTREE& p);
+    friend std::ostream& operator<<(std::ostream& out, const bTREE* p);
 
     static void displayLeft( std::ostream & outfile,
       bTREE * subtree, std::string prefix );

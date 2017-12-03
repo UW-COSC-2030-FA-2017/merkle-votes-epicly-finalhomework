@@ -134,58 +134,99 @@ int bTREE::insert(string data1, int time1)
 	return 0;
 }
 //0 is false i.e the string was not found, any other number indicates the number of operations.
-// how to count the number of operations in a function for individual submission?
 int bTREE::find(string x)
 {
-    static bool found = false;
-    static int steps= 0;
-    if((rootNode->data != x) && (rootNode->isLeaf == false))
-    {
-        steps = 1 + rightTree->find(x)+leftTree->find(x);
-    }
-    else
-    {
-       steps ++;
-       found = true;
-    }
-    if(found)
-    {
-        return steps;
-    }
-    return 0;
+	int steps  = 0;
+	findHD(this, x, steps);
+	if (steps == 1)
+	{
+		return 0;
+	}
+	return steps;
 }
 
 string bTREE::locate(string x)
 {
-    static string directions;
-	cout << "test:" << find(x) << endl;
-    if(find(x)==0)
-    {
-        directions = ".";
-    }
-    else
-    {
-        if((rootNode->data == x) && (rootNode->isLeaf == false))
-        {
-            directions = directions+(" ");
-        }
-        /*else
-        {*/
-     
-		else if((leftTree->find(x) > 0) && (rootNode->isLeaf == false))
-            {
-                directions = directions + "L";
-                leftTree->locate(x);
-            }
-		else if ((rightTree->find(x)) > 0 && (rootNode->isLeaf == false))
+ //   static string directions;
+	////directions = "";
+	//cout << "test:" << find(x) << endl;
+ //   if(find(x)==0)
+ //   {
+ //       directions = ".";
+ //   }
+ //   else
+ //   {
+ //       if((rootNode->data == x) && (rootNode->isLeaf == false))
+ //       {
+ //           directions = directions+(" ");
+ //       }
+ //       /*else
+ //       {*/
+ //    
+	//	else if((leftTree->find(x) > 0) && (rootNode->isLeaf == false))
+ //           {
+ //               directions = directions + "L";
+ //               leftTree->locate(x);
+ //           }
+	//	else if ((rightTree->find(x)) > 0 && (rootNode->isLeaf == false))
+	//	{
+	//		directions = directions + "R";
+	//		rightTree->locate(x);
+	//	}
+
+ //      /* }*/
+ //   }
+	string directions = "";
+	locateH(this, x, directions);
+    return directions;
+}
+
+string bTREE::locateH(bTREE * tree, string & hash, string & directions)
+{
+	if (tree->find(hash) != 0)
+	{
+		directions = directions + " ";
+	}
+	else
+	{
+		if (tree->leftTree->find(hash) != 0)
+		{
+			directions = directions + "L";
+			locateH(tree->leftTree, hash, directions);
+		}
+		else if (tree->leftTree->find(hash) != 0)
 		{
 			directions = directions + "R";
-			rightTree->locate(x);
+			locateH(tree->rightTree, hash, directions);
 		}
+		else
+		{
+			directions = directions + ".";
+		}
+	}
+	return directions;
+}
 
-       /* }*/
-    }
-    return directions;
+int bTREE::findHD(bTREE * tree, string & hash, int & steps)
+{
+	static bool found = false;
+	if ((tree->rootNode->data != hash)) 
+	{
+		if (tree->leftTree != NULL || tree->rightTree != NULL)
+		{
+			steps = 1 + findHD(tree->leftTree, hash, steps) + findHD(tree->rightTree, hash, steps);
+		}
+	}
+	else if ((tree->rootNode->data == hash))
+	{
+		steps++;
+		found = true;
+	}
+	if (found == true)
+	{
+		return steps;
+	}
+	return 0;
 }
 
 bool operator ==(const bTREE& lhs, const bTREE& rhs)
